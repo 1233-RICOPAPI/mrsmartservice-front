@@ -7,8 +7,11 @@
 const host    = location.hostname;
 const isLocal = host === 'localhost' || host === '127.0.0.1';
 
-// Cambia esto al desplegar (Render/Vercel/etc.)
-const API = isLocal ? 'http://localhost:8080/api' : 'https://TU-API.onrender.com/api';
+// Backend local vs producción (Render)
+const API = isLocal
+  ? 'http://localhost:8080/api'
+  : 'https://mrsmartservice-backend.onrender.com/api';
+
 // Origen base del backend (para servir /uploads/...)
 const API_ORIGIN = API.replace(/\/api$/, '');
 
