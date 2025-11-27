@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito | MR SmartService</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER GLOBAL -->
+  <header class="main-header">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="Logo MR SmartService" class="logo-img">
+      <h1>MR SmartService</h1>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="carrito.html" class="active">Carrito</a>
+       <button id="btnAdmin" class="btn-admin">Administrador</button>
+    </nav>
+  </header>
+
+  <!-- CARRITO -->
+  <section class="carrito-section cart-page">
+    <div class="carrito-container cart-card">
+      <h2 class="cart-title">Carrito de compras</h2>
+
+      <div id="lista-carrito" class="productos-carrito cart-items">
+        <!-- Los productos se inyectan desde app.js -->
+        <p id="carrito-vacio">Tu carrito está vacío.</p>
+      </div>
+
+      <div class="resumen-compra cart-summary">
+        <h3 id="total" class="cart-total-amount">Total: $0</h3>
+
+        <button id="finalizarCompra" class="btn-comprar btn-cart-checkout">
+          Finalizar compra
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>© 2025 <strong>MR SmartService</strong>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <div id="app-footer"></div>
+</body>
+</html>

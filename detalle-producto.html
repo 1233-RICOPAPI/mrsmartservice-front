@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del producto | MR SmartService</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- HEADER reutilizado -->
+  <header class="main-header">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="Logo MR SmartService" class="logo-img">
+      <h1>MR SmartService</h1>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html" class="active">Productos</a>
+      <a href="carrito.html">Carrito</a>
+      <button id="btnAdmin" class="btn-admin">Administrador</button>
+    </nav>
+  </header>
+
+  <!-- Botón flotante carrito -->
+  <a href="carrito.html" class="cart-float">
+    <img src="images/cart-icon.svg" alt="Carrito de compras">
+    <span id="cart-count">0</span>
+  </a>
+
+  <!-- CONTENIDO DETALLE -->
+  <main class="detalle-main">
+    <section id="detalleProducto" class="detalle-grid">
+      <!-- Se llena por JS -->
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

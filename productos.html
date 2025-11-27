@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Productos | MR SmartService</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="Logo MR SmartService" class="logo-img"/>
+      <h1>MR SmartService</h1>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html" class="active">Productos</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="carrito.html">Carrito <span id="cart-count">0</span></a>
+       <button id="btnAdmin" class="btn-admin">Administrador</button>
+      
+     
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- Filtros -->
+    <section class="panel">
+      <header class="panel-head">
+        <h2>Catálogo</h2>
+        <form id="filtrosProd" class="filters">
+          <div class="field grow">
+            <label for="q">Buscar</label>
+            <input id="q" type="search" placeholder="Nombre, categoría..."/>
+          </div>
+          <div class="field">
+            <label for="categoriaSelect">Categoría</label>
+            <select id="categoriaSelect">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pmin">Precio min</label>
+            <input id="pmin" type="number" min="0" placeholder="0"/>
+          </div>
+          <div class="field">
+            <label for="pmax">Precio max</label>
+            <input id="pmax" type="number" min="0" placeholder="∞"/>
+          </div>
+          <div class="field">
+            <label for="soloDesc">Descuento</label>
+            <input id="soloDesc" type="checkbox"/>
+          </div>
+          <div class="field">
+            <label for="ordenSelect">Ordenar</label>
+            <select id="ordenSelect">
+              <option value="recent">Recientes</option>
+              <option value="priceAsc">Precio ↑</option>
+              <option value="priceDesc">Precio ↓</option>
+              <option value="nameAsc">Nombre A-Z</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Aplicar</button>
+        </form>
+      </header>
+
+      <!-- Grid -->
+      <div id="productos" class="grid-catalogo"></div>
+
+      <!-- Vacío -->
+      <div id="prodEmpty" class="empty-state" hidden>
+        <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/package.svg" alt="">
+        <p>No encontramos productos con esos filtros.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer inyectado por app.js -->
+  <div id="app-footer"></div>
+
+  <!-- Script principal (al final) -->
+  <script defer src="app.js"></script>
+</body>
+</html>

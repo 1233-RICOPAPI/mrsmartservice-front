@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrador | MR SmartService</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&family=Open+Sans:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <!-- HEADER (solo admin) -->
+  <header class="main-header">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="Logo MR SmartService" class="logo-img" />
+      <h1>MR SmartService</h1>
+    </div>
+
+    <nav class="admin-nav" aria-label="Navegación del panel">
+      <span class="badge-admin" aria-current="page">Administrador</span>
+    </nav>
+
+    <button id="logoutBtn" class="logout-btn" type="button">Cerrar sesión</button>
+  </header>
+
+  <!-- PANEL ADMIN -->
+  <section class="admin-panel">
+    <div class="admin-container">
+
+      <!-- Tabs -->
+      <div class="admin-tabs" role="tablist" aria-label="Secciones del panel">
+        <button class="tab-btn active" data-tab="tab-prod" role="tab" aria-selected="true" type="button">
+          Productos
+        </button>
+        <button class="tab-btn" data-tab="tab-ventas" role="tab" aria-selected="false" type="button">
+          Ventas
+        </button>
+        <button class="tab-btn" data-tab="tab-estadisticas" role="tab" aria-selected="false" type="button">
+          Estadísticas
+        </button>
+        <button class="tab-btn" data-tab="tab-perfil" role="tab" aria-selected="false" type="button">
+          Perfil
+        </button>
+      </div>
+
+      <!-- ========== TAB PRODUCTOS ========== -->
+      <div id="tab-prod" class="tab-pane active" role="region" aria-labelledby="titulo-prod">
+        <h2 id="titulo-prod">Gestión de Productos</h2>
+
+        <form id="formProducto" class="formulario-admin" autocomplete="off" aria-labelledby="titulo-prod">
+          <label for="nombre" class="sr-only">Nombre del producto</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Nombre del producto" required />
+
+          <label for="categoria" class="sr-only">Categoría</label>
+          <input
+            type="text"
+            id="categoria"
+            name="categoria"
+            placeholder="Categoría (tecnología, cámaras, componentes…)"
+            required
+          />
+
+          <label for="precio" class="sr-only">Precio</label>
+          <input
+            type="number"
+            id="precio"
+            name="precio"
+            placeholder="Precio ($)"
+            required
+            min="0"
+            step="1"
+          />
+
+          <label for="stock" class="sr-only">Cantidad disponible</label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            placeholder="Cantidad disponible"
+            required
+            min="0"
+            step="1"
+          />
+
+          <!-- Campo SOLO para archivo local -->
+          <div class="file-field">
+            <span class="file-label">Imagen desde tu PC</span>
+            <label for="imgFile" class="btn-file">Seleccionar imagen</label>
+            <span id="fileName" class="file-name">Ningún archivo seleccionado</span>
+            <input type="file" id="imgFile" accept="image/*" hidden />
+          </div>
+
+          <button type="submit" class="btn-guardar">Agregar producto</button>
+        </form>
+
+        <!-- Render de cards admin (lo llena app.js) -->
+        <div id="listaAdmin" class="lista-productos-admin" aria-live="polite"></div>
+      </div>
+
+      <!-- ========== TAB VENTAS ========== -->
+      <div id="tab-ventas" class="tab-pane" role="region" aria-labelledby="titulo-ventas">
+        <section class="panel">
+          <header class="panel-head">
+            <h2 id="titulo-ventas">Historial de ventas</h2>
+            <form id="filtrosVentas" class="filters" aria-describedby="ventas-ayuda">
+              <div class="field">
+                <label for="ventaDesde">Desde</label>
+                <input type="date" id="ventaDesde" name="ventaDesde" />
+              </div>
+              <div class="field">
+                <label for="ventaHasta">Hasta</label>
+                <input type="date" id="ventaHasta" name="ventaHasta" />
+              </div>
+              <div class="field">
+                <label for="ventaEstado">Estado</label>
+                <select id="ventaEstado" name="ventaEstado">
+                  <option value="todos" selected>Todos</option>
+                  <option value="approved">Aprobado</option>
+                  <option value="pending">Pendiente</option>
+                  <option value="rejected">Rechazado</option>
+                </select>
+              </div>
+              <div class="field grow">
+                <label for="ventaQuery">Buscar</label>
+                <input
+                  type="search"
+                  id="ventaQuery"
+                  name="ventaQuery"
+                  placeholder="Cliente, email, #orden…"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Aplicar</button>
+              <small id="ventas-ayuda" class="sr-only"
+                >Filtra por fechas, estado o texto de búsqueda.</small
+              >
+            </form>
+          </header>
+
+          <div class="table-wrap">
+            <table class="smart-table" id="tablaVentas">
+              <caption class="sr-only">Tabla de ventas filtradas</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Orden</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col" class="right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="ventasBody"><!-- filas dinámicas --></tbody>
+            </table>
+
+            <div id="ventasEmpty" class="empty-state" hidden>
+              <img
+                src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/shopping-cart.svg"
+                alt="Carrito vacío"
+              />
+              <p>No hay ventas que coincidan con los filtros.</p>
+            </div>
+          </div>
+
+          <footer class="panel-foot">
+            <div class="pager">
+              <button class="btn btn-light" id="prevVentas" type="button">Anterior</button>
+              <span id="infoVentas" aria-live="polite">Página 1 de 1</span>
+              <button class="btn btn-light" id="nextVentas" type="button">Siguiente</button>
+            </div>
+          </footer>
+        </section>
+      </div>
+
+      <!-- ========== TAB ESTADÍSTICAS ========== -->
+      <div id="tab-estadisticas" class="tab-pane" role="region" aria-labelledby="titulo-estadisticas">
+        <section class="panel">
+          <header class="panel-head">
+            <h2 id="titulo-estadisticas">Estadísticas</h2>
+          <div class="filters">
+              <div class="field">
+                <label for="statsRange">Rango</label>
+                <select id="statsRange" name="statsRange" aria-describedby="statsRangeHelp">
+                  <option value="day">Diario</option>
+                  <option value="week">Semanal</option>
+                  <option value="month" selected>Mensual</option>
+                  <option value="year">Anual</option>
+                </select>
+                <small id="statsRangeHelp" class="sr-only"
+                  >Selecciona el rango temporal del reporte</small
+                >
+              </div>
+              <button
+                class="btn btn-primary"
+                id="btnStats"
+                type="button"
+                aria-describedby="statsBtnHelp"
+              >
+                Actualizar
+              </button>
+              <small id="statsBtnHelp" class="sr-only"
+                >Genera las métricas según el rango seleccionado</small
+              >
+            </div>
+          </header>
+
+          <div class="stats-grid" role="group" aria-label="Indicadores clave">
+            <div class="kpi">
+              <span class="kpi-title">Ingresos</span>
+              <strong id="kpiIngresos">$0</strong>
+              <small id="kpiIngresosDelta" class="delta up">+0%</small>
+            </div>
+            <div class="kpi">
+              <span class="kpi-title">Órdenes</span>
+              <strong id="kpiOrdenes">0</strong>
+              <small id="kpiOrdenesDelta" class="delta">0%</small>
+            </div>
+            <div class="kpi">
+              <span class="kpi-title">Ticket promedio</span>
+              <strong id="kpiTicket">$0</strong>
+              <small id="kpiTicketDelta" class="delta">0%</small>
+            </div>
+            <div class="kpi">
+              <span class="kpi-title">Tasa de aprobación</span>
+              <strong id="kpiRate">0%</strong>
+              <small id="kpiRateDelta" class="delta">0%</small>
+            </div>
+          </div>
+
+          <div class="mini-bars" id="barsVentas"><!-- barras dinámicas --></div>
+        </section>
+      </div>
+
+      <!-- ========== TAB PERFIL (CAMBIO DE CONTRASEÑA) ========== -->
+      <div id="tab-perfil" class="tab-pane" role="region" aria-labelledby="titulo-perfil">
+        <section class="admin-card" id="admin-profile">
+          <h2 id="titulo-perfil">Mi perfil – Cambiar contraseña</h2>
+          <p class="profile-sub">
+            Mantén seguro tu panel actualizando tu contraseña periódicamente.
+          </p>
+
+          <form id="formChangePassword" class="form-grid" autocomplete="off">
+            <!-- Fila 1: contraseña actual -->
+            <div class="profile-row">
+              <div class="form-field">
+                <label for="oldPassword">Contraseña actual</label>
+                <input type="password" id="oldPassword" required />
+              </div>
+            </div>
+
+            <!-- Fila 2: nueva + repetir -->
+            <div class="profile-row profile-row-2">
+              <div class="form-field">
+                <label for="newPassword">Nueva contraseña</label>
+                <input type="password" id="newPassword" required />
+              </div>
+
+              <div class="form-field">
+                <label for="newPassword2">Repite la nueva contraseña</label>
+                <input type="password" id="newPassword2" required />
+              </div>
+            </div>
+
+            <!-- Botón + mensaje -->
+            <div class="profile-actions">
+              <button type="submit" class="btn-primary">
+                Actualizar contraseña
+              </button>
+              <p id="changePassMsg" class="text-sm"></p>
+            </div>
+          </form>
+        </section>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Slot para footer global inyectado por app.js -->
+  <div id="app-footer"></div>
+
+  <!-- Script de la app (global) -->
+  <script src="app.js"></script>
+
+  <!-- Hooks específicos del panel admin -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* ---------- Alta de productos ---------- */
+      const form = document.getElementById('formProducto');
+      const fileInput = document.getElementById('imgFile');
+      const fileName = document.getElementById('fileName');
+
+      if (fileInput && fileName) {
+        fileInput.addEventListener('change', () => {
+          fileName.textContent = fileInput.files[0]
+            ? fileInput.files[0].name
+            : 'Ningún archivo seleccionado';
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById('nombre').value.trim();
+          const category = document.getElementById('categoria').value.trim();
+          const price = +document.getElementById('precio').value || 0;
+          const stock = +document.getElementById('stock').value || 0;
+
+          // 1) subimos imagen (si hay)
+          const urlFromUpload = await uploadImage(); // definida en app.js
+
+          const body = {
+            name,
+            price,
+            stock,
+            discount_percent: 0,
+            category,
+            image_url: urlFromUpload || ''
+          };
+
+          await createProd(body);
+          form.reset();
+          if (fileName) fileName.textContent = 'Ningún archivo seleccionado';
+        });
+      }
+
+      /* ---------- Cambio de contraseña ---------- */
+      const formPass = document.getElementById('formChangePassword');
+      const msg = document.getElementById('changePassMsg');
+
+      if (formPass) {
+        formPass.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (msg) {
+            msg.textContent = '';
+            msg.style.color = '';
+          }
+
+          const oldPassword = document.getElementById('oldPassword').value.trim();
+          const newPassword = document.getElementById('newPassword').value.trim();
+          const newPassword2 = document.getElementById('newPassword2').value.trim();
+
+          if (!oldPassword || !newPassword || !newPassword2) {
+            if (msg) {
+              msg.textContent = 'Completa todos los campos.';
+              msg.style.color = 'red';
+            }
+            return;
+          }
+
+          if (newPassword !== newPassword2) {
+            if (msg) {
+              msg.textContent = 'Las nuevas contraseñas no coinciden.';
+              msg.style.color = 'red';
+            }
+            return;
+          }
+
+          if (newPassword.length < 8) {
+            if (msg) {
+              msg.textContent = 'La nueva contraseña debe tener al menos 8 caracteres.';
+              msg.style.color = 'red';
+            }
+            return;
+          }
+
+          try {
+            const res = await fetch(API + '/users/change-password', {
+              method: 'POST',
+              headers: authHeaders(),
+              body: JSON.stringify({ oldPassword, newPassword })
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok || !data.success) {
+              const error = data.error || 'No se pudo actualizar la contraseña.';
+              let friendly = error;
+
+              if (error === 'invalid_password') friendly = 'La contraseña actual no es correcta.';
+              if (error === 'weak_password') friendly = 'La nueva contraseña es demasiado débil.';
+              if (error === 'missing_fields') friendly = 'Faltan datos para cambiar la contraseña.';
+
+              if (msg) {
+                msg.textContent = friendly;
+                msg.style.color = 'red';
+              }
+              return;
+            }
+
+            if (msg) {
+              msg.textContent = 'Contraseña actualizada correctamente.';
+              msg.style.color = 'green';
+            }
+            formPass.reset();
+          } catch (err) {
+            console.error('change-password error:', err);
+            if (msg) {
+              msg.textContent = 'Error de conexión al cambiar la contraseña.';
+              msg.style.color = 'red';
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

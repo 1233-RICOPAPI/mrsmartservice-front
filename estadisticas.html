@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estadísticas | MR SmartService</title>
+
+  <!-- Fuentes y estilos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- (Opcional) Chart.js si luego quieres gráficas de líneas o barras -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ===== HEADER GLOBAL ===== -->
+  <header class="main-header">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="Logo MR SmartService" class="logo-img"/>
+      <h1>MR SmartService</h1>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="carrito.html">Carrito</a>
+      <a href="admin.html">Administrador</a>
+      <a href="estadisticas.html" class="active">Estadísticas</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- ===== Historial de Ventas ===== -->
+    <section class="panel">
+      <header class="panel-head">
+        <h2>Historial de ventas</h2>
+        <form id="filtrosVentas" class="filters">
+          <div class="field">
+            <label for="ventaDesde">Desde</label>
+            <input type="date" id="ventaDesde"/>
+          </div>
+          <div class="field">
+            <label for="ventaHasta">Hasta</label>
+            <input type="date" id="ventaHasta"/>
+          </div>
+          <div class="field">
+            <label for="ventaEstado">Estado</label>
+            <select id="ventaEstado">
+              <option value="todos">Todos</option>
+              <option value="approved">Aprobado</option>
+              <option value="pending">Pendiente</option>
+              <option value="rejected">Rechazado</option>
+            </select>
+          </div>
+          <div class="field grow">
+            <label for="ventaQuery">Buscar</label>
+            <input type="search" id="ventaQuery" placeholder="Cliente, email, id de orden..."/>
+          </div>
+          <button type="submit" class="btn btn-primary">Aplicar</button>
+        </form>
+      </header>
+
+      <div class="table-wrap">
+        <table class="smart-table" id="tablaVentas">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Orden</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th class="right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="ventasBody">
+            <!-- filas dinámicas -->
+          </tbody>
+        </table>
+
+        <div id="ventasEmpty" class="empty-state" hidden>
+          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/shopping-cart.svg" alt="Sin ventas"/>
+          <p>No hay ventas que coincidan con los filtros.</p>
+        </div>
+      </div>
+
+      <footer class="panel-foot">
+        <div class="pager">
+          <button class="btn btn-light" id="prevVentas">Anterior</button>
+          <span id="infoVentas">Página 1 de 1</span>
+          <button class="btn btn-light" id="nextVentas">Siguiente</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ===== Estadísticas ===== -->
+    <section class="panel">
+      <header class="panel-head">
+        <h2>Estadísticas</h2>
+        <div class="filters">
+          <div class="field">
+            <label for="statsRange">Rango</label>
+            <select id="statsRange">
+              <option value="day">Diario</option>
+              <option value="week">Semanal</option>
+              <option value="month" selected>Mensual</option>
+              <option value="year">Anual</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btnStats">Actualizar</button>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="kpi">
+          <span class="kpi-title">Ingresos</span>
+          <strong id="kpiIngresos">$0</strong>
+          <small id="kpiIngresosDelta" class="delta up">+0%</small>
+        </div>
+        <div class="kpi">
+          <span class="kpi-title">Órdenes</span>
+          <strong id="kpiOrdenes">0</strong>
+          <small id="kpiOrdenesDelta" class="delta">0%</small>
+        </div>
+        <div class="kpi">
+          <span class="kpi-title">Ticket promedio</span>
+          <strong id="kpiTicket">$0</strong>
+          <small id="kpiTicketDelta" class="delta">0%</small>
+        </div>
+        <div class="kpi">
+          <span class="kpi-title">Tasa de aprobación</span>
+          <strong id="kpiRate">0%</strong>
+          <small id="kpiRateDelta" class="delta">0%</small>
+        </div>
+      </div>
+
+      <!-- Mini barras (sin librerías) -->
+      <div class="mini-bars" id="barsVentas"></div>
+
+      <!-- (Opcional) Gráfica con Chart.js
+      <div class="chart-wrapper">
+        <canvas id="ventasChart"></canvas>
+      </div>
+      -->
+    </section>
+
+  </main>
+
+  <!-- Footer inyectado por app.js -->
+  <div id="app-footer"></div>
+
+  <!-- Script principal (debe venir después del #app-footer) -->
+  <script src="app.js"></script>
+</body>
+</html>
